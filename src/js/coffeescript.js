@@ -2,8 +2,9 @@ import path from 'path';
 import btoa from 'btoa';
 import {SimpleCompilerBase} from '../compiler-base';
 
-const inputMimeTypes = ['text/coffeescript'];
+const inputMimeTypes = ['text/cjsx', 'text/coffeescript'];
 let coffee = null;
+let cjsx = null;
 
 /**
  * @access private
@@ -20,9 +21,10 @@ export default class CoffeeScriptCompiler extends SimpleCompilerBase {
 
   compileSync(sourceCode, filePath) {
     coffee = coffee || require('coffee-script');
+    cjsx = cjsx || require('coffee-react-transform');
 
     let {js, v3SourceMap} = coffee.compile(
-      sourceCode,
+      cjsx(sourceCode),
       Object.assign({ filename: filePath }, this.compilerOptions));
 
     js = `${js}\n` +
