@@ -14,7 +14,7 @@ export default class LessCompiler extends CompilerBase {
     this.compilerOptions = {
       sourceMap: { sourceMapFileInline: true }
     };
-
+    this.resolvedOptions = null;
     this.seenFilePaths = {};
   }
 
@@ -36,23 +36,39 @@ export default class LessCompiler extends CompilerBase {
     let thisPath = path.dirname(filePath);
     this.seenFilePaths[thisPath] = true;
 
-    let paths = Object.keys(this.seenFilePaths);
-
-    if (this.compilerOptions.paths) {
-      paths.push(...this.compilerOptions.paths);
-    }
-
-    let opts = Object.assign({}, this.compilerOptions, {
-      paths: paths,
-      filename: path.basename(filePath)
-    });
-
+    const opts = this.getOptionsForPath(filePath, compilerContext);
     let result = await lessjs.render(sourceCode, opts);
 
     return {
       code: result.css,
       mimeType: 'text/css'
     };
+  }
+
+  getOptionsForPath(filePath, compilerContext) {
+    if (!this.resolvedOptions) {
+      const {paths, rootpath, basepath} = this.compilerOptions;
+      const {appRoot} = compilerContext;
+
+      this.resolvedOptions = Object.assign({}, this.compilerOptions, {
+        paths: (paths || []).map((relativePath) => path.resolve(appRoot, relativePath)),
+        rootpath: rootpath ? path.resolve(appRoot, rootpath) : undefined,
+        basepath: basepath ? path.resolve(appRoot, basepath) : undefined,
+      });
+    }
+
+    const opts = Object.assign({}, this.resolvedOptions, {
+      filename: path.basename(filePath),
+    });
+
+    if (opts.pathsIncludeSeen !== false) {
+      opts.paths = opts.paths.concat(Object.keys(this.seenFilePaths));
+    }
+
+    // always allow file-relative imports
+    opts.paths.push(path.dirname(filePath));
+
+    return opts;
   }
 
   shouldCompileFileSync(fileName, compilerContext) {
@@ -72,15 +88,7 @@ export default class LessCompiler extends CompilerBase {
     let thisPath = path.dirname(filePath);
     this.seenFilePaths[thisPath] = true;
 
-    let paths = Object.keys(this.seenFilePaths);
-
-    if (this.compilerOptions.paths) {
-      paths.push(...this.compilerOptions.paths);
-    }
-
-    let opts = Object.assign({}, this.compilerOptions, {
-      paths: paths,
-      filename: path.basename(filePath),
+    const opts = Object.assign(this.getOptionsForPath(filePath, compilerContext), {
       fileAsync: false, async: false, syncImport: true
     });
 
