@@ -29,6 +29,10 @@ export default class StylusCompiler extends CompilerBase {
     return mimeTypes;
   }
 
+  static getOutputMimeType() {
+    return 'text/css';
+  }
+
   async shouldCompileFile(fileName, compilerContext) {
     return true;
   }

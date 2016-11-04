@@ -17,6 +17,10 @@ export default class BabelCompiler extends CompilerBase {
     return mimeTypes;
   }
 
+  static getOutputMimeType() {
+    return 'application/javascript';
+  }
+
   async shouldCompileFile(fileName, compilerContext) {
     return true;
   }

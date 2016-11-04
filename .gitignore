@@ -28,3 +28,5 @@ node_modules
 
 test-dist
 docs
+/src/.DS_Store
+/.DS_Store

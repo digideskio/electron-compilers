@@ -15,11 +15,13 @@ export default class CSONCompiler extends SimpleCompilerBase {
     return inputMimeTypes;
   }
 
+  static getOutputMimeType() {
+    return 'application/json';
+  }
+
   compileSync(sourceCode, filePath) {
     CSON = CSON || require('cson');
-
     let result = CSON.parse(sourceCode);
-
     return {
       code: JSON.stringify(result),
       mimeType: 'application/json'

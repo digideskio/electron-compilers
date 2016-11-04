@@ -5,7 +5,7 @@ let jade = null;
 
 /**
  * @access private
- */ 
+ */
 export default class JadeCompiler extends SimpleCompilerBase {
   constructor() {
     super();
@@ -14,6 +14,10 @@ export default class JadeCompiler extends SimpleCompilerBase {
 
   static getInputMimeTypes() {
     return inputMimeTypes;
+  }
+
+  static getOutputMimeType() {
+    return 'text/html';
   }
 
   compileSync(sourceCode, filePath) {

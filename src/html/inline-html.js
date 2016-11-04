@@ -58,6 +58,10 @@ export default class InlineHtmlCompiler extends CompilerBase {
     return inputMimeTypes;
   }
 
+  static getOutputMimeType() {
+    return 'text/html';
+  }
+
   async shouldCompileFile(fileName, compilerContext) {
     return true;
   }

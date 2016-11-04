@@ -23,6 +23,10 @@ export default class TypeScriptCompiler extends SimpleCompilerBase {
     return inputMimeTypes;
   }
 
+  static getOutputMimeType() {
+    return 'application/javascript';
+  }
+
   compileSync(sourceCode, filePath) {
     tss = tss || require('@paulcbetts/typescript-simple');
     ts = ts || require('typescript');

@@ -19,6 +19,10 @@ export default class CoffeeScriptCompiler extends SimpleCompilerBase {
     return inputMimeTypes;
   }
 
+  static getOutputMimeType() {
+    return 'application/javascript';
+  }
+
   compileSync(sourceCode, filePath) {
     coffee = coffee || require('coffee-script');
     cjsx = cjsx || require('coffee-react-transform');
