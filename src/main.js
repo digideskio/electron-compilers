@@ -4,6 +4,7 @@ const filenames = [
   'js/babel',
   'js/coffeescript',
   'js/typescript',
+  'json/json',
   'json/cson',
   'html/inline-html',
   'html/jade',
